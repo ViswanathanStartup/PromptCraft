@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/promptcraft_dev
+  jpa:
+    show-sql: true
+
+logging:
+  level:
+    com.promptcraft: DEBUG

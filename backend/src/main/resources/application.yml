@@ -1,0 +1,79 @@
+spring:
+  application:
+    name: promptcraft-backend
+  
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:promptcraft}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-stacktrace: on_param
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:your-secret-key-change-this-in-production-make-it-at-least-256-bits-long}
+  expiration: 86400000 # 24 hours in milliseconds
+  refresh-expiration: 604800000 # 7 days in milliseconds
+
+# CORS Configuration
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000}
+  allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+# Subscription Plans
+subscription:
+  plans:
+    free:
+      name: Free
+      daily-limit: 10
+      monthly-limit: 100
+      features:
+        - Basic templates
+        - Basic analysis
+    pro:
+      name: Pro
+      daily-limit: -1 # unlimited
+      monthly-limit: -1
+      price: 9.99
+      features:
+        - Unlimited templates
+        - Advanced AI analysis
+        - Custom templates
+        - Priority support
+    enterprise:
+      name: Enterprise
+      daily-limit: -1
+      monthly-limit: -1
+      price: 49.99
+      features:
+        - Everything in Pro
+        - API access
+        - White-label option
+        - Dedicated support
+        - Team collaboration
+
+logging:
+  level:
+    com.promptcraft: DEBUG
+    org.springframework.security: DEBUG

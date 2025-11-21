@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(npm outdated:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout /t 3)",
+      "Bash(nul)",
+      "Bash(npm uninstall:*)",
+      "Bash(timeout /t 2)",
+      "Bash(node -e:*)",
+      "Bash(node analyze.js:*)",
+      "Bash(node verify.cjs:*)",
+      "Bash(node clean_attributions.cjs:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

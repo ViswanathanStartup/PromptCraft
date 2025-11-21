@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: promptcraft-db
+    environment:
+      POSTGRES_DB: promptcraft
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - promptcraft-network
+
+  backend:
+    build: ./backend
+    container_name: promptcraft-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: promptcraft
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: your-super-secret-jwt-key-change-this-in-production-make-it-at-least-256-bits-long-for-security
+      CORS_ORIGINS: http://localhost:5173,http://localhost:3000
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - promptcraft-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: promptcraft-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - promptcraft-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  promptcraft-network:
+    driver: bridge
