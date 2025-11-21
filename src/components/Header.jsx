@@ -1,8 +1,7 @@
-import { Brain, MessageCircle, Menu, X } from 'lucide-react';
+import { Brain, Menu, X } from 'lucide-react';
 import TabNavigation from './TabNavigation';
 
 const Header = ({ 
-  onShowFeedback, 
   mobileMenuOpen, 
   setMobileMenuOpen,
   activeTab,
@@ -44,7 +43,6 @@ const Header = ({
             setActiveTab={setActiveTab}
             historyCount={historyCount}
             favoritesCount={favoritesCount}
-            onShowFeedback={onShowFeedback}
             setMobileMenuOpen={setMobileMenuOpen}
             isMobile={true}
             showComparison={showComparison}

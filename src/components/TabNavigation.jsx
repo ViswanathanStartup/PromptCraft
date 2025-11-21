@@ -13,7 +13,6 @@ const TabNavigation = ({
   setActiveTab,
   historyCount,
   favoritesCount,
-  onShowFeedback,
   setMobileMenuOpen,
   isMobile = false
 }) => {

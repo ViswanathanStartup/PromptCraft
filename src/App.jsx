@@ -1,6 +1,4 @@
 import { useState, useMemo } from 'react';
-import { MessageCircle } from 'lucide-react';
-import emailjs from '@emailjs/browser';
 
 // Components
 import Header from './components/Header';
@@ -10,8 +8,7 @@ import TemplatesTab from './components/TemplatesTab';
 import HistoryTab from './components/HistoryTab';
 import FavoritesTab from './components/FavoritesTab';
 import LearnTab from './components/LearnTab';
-import FeedbackModal from './components/FeedbackModal';
-import { CopySuccessNotification, FeedbackSubmittedNotification } from './components/Notifications';
+import { CopySuccessNotification } from './components/Notifications';
 
 // Utils and Hooks
 import { analyzePrompt } from './utils/promptAnalyzer';
@@ -28,11 +25,6 @@ function App() {
 
   // Notifications
   const [copySuccess, setCopySuccess] = useState(false);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
-  
-  // Feedback Modal
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [feedback, setFeedback] = useState('');
   
   // Custom Hooks
   const { history, addToHistory, removeFromHistory, clearHistory } = usePromptHistory();
@@ -97,40 +89,6 @@ function App() {
   // Handle favorite toggling with refresh callback
   const handleToggleFavorite = (item, type) => {
     return toggleFavorite(item, type);
-  };
-
-  // Feedback submission
-  const handleSubmitFeedback = async () => {
-    if (!feedback.trim()) return;
-
-    // EmailJS Configuration
-    const serviceId = 'YOUR_SERVICE_ID'; // Replace with your EmailJS Service ID
-    const templateId = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS Template ID
-    const publicKey = 'YOUR_PUBLIC_KEY'; // Replace with your EmailJS Public Key
-
-    try {
-      // Send email using EmailJS
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          message: feedback,
-          to_email: 'humanxai2025@gmail.com',
-          from_name: 'Prompt Craft User',
-          timestamp: new Date().toLocaleString()
-        },
-        publicKey
-      );
-
-      // Show success notification
-      setFeedbackSubmitted(true);
-      setShowFeedback(false);
-      setFeedback('');
-      setTimeout(() => setFeedbackSubmitted(false), 3000);
-    } catch (error) {
-      console.error('Failed to send feedback:', error);
-      alert('Failed to send feedback. Please try again.');
-    }
   };
 
   // Handle lesson completion
@@ -236,7 +194,6 @@ function App() {
       <div className="relative z-10">
         {/* Header */}
         <Header
-          onShowFeedback={() => setShowFeedback(true)}
           mobileMenuOpen={mobileMenuOpen}
           setMobileMenuOpen={setMobileMenuOpen}
           activeTab={activeTab}
@@ -252,7 +209,6 @@ function App() {
             setActiveTab={setActiveTab}
             historyCount={history.length}
             favoritesCount={favorites.length}
-            onShowFeedback={() => setShowFeedback(true)}
             setMobileMenuOpen={setMobileMenuOpen}
           />
         </div>
@@ -266,50 +222,24 @@ function App() {
         <footer className="border-t border-white/10 bg-black/20 backdrop-blur-sm">
           <div className="container mx-auto px-4 py-6 text-center">
             <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3">
-              <span className="text-slate-400 text-xs sm:text-sm">Built with</span>
-              <span className="text-red-400 text-base sm:text-lg">❤️</span>
-              <span className="text-slate-400 text-xs sm:text-sm">by</span>
-              <span className="text-purple-400 font-semibold text-xs sm:text-sm">Sriram Srinivasan</span>
+              <a 
+                href="https://www.ainternals.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-slate-400 hover:text-purple-400 transition-colors text-xs sm:text-sm"
+              >
+                © 2025 ainternals.com
+              </a>
             </div>
           </div>
         </footer>
       </div>
 
-      {/* Floating Feedback Button */}
-      <button
-        onClick={() => setShowFeedback(true)}
-        className="fixed bottom-6 right-6 z-50 group"
-        title="Send Feedback"
-      >
-        <div className="relative">
-          {/* Glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur-lg opacity-75 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
-
-          {/* Button */}
-          <div className="relative flex items-center gap-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-full px-6 py-4 shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-purple-500/50">
-            <MessageCircle className="w-5 h-5" />
-            <span className="font-semibold text-sm hidden sm:inline">Feedback</span>
-          </div>
-        </div>
-      </button>
-
       {/* Modals and Notifications */}
-      <FeedbackModal
-        isOpen={showFeedback}
-        onClose={() => setShowFeedback(false)}
-        feedback={feedback}
-        setFeedback={setFeedback}
-        onSubmit={handleSubmitFeedback}
-      />
 
       <CopySuccessNotification
         isVisible={copySuccess}
         onClose={() => setCopySuccess(false)}
-      />
-
-      <FeedbackSubmittedNotification
-        isVisible={feedbackSubmitted}
-        onClose={() => setFeedbackSubmitted(false)}
       />
     </div>
   );
